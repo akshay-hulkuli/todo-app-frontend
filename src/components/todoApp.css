@@ -1,0 +1,30 @@
+.login-form {
+    padding: 20px;
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.input-field {
+    display: flex;
+}
+
+.submit-button-ctn {
+    display: flex;
+    justify-content: flex-end;
+    width: 350px;
+}
+
+.submit-button {
+    padding: 10px;
+    margin: 20px 0;
+}
+
+.login-success {
+    color: green;
+}
+
+.login-failure {
+    color: red;
+}
