@@ -1,17 +1,28 @@
 import { useState } from "react";
-import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
+import {
+  BrowserRouter,
+  Link,
+  Route,
+  Routes,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 import "./todoApp.css";
 
 const TodoApp = () => {
   return (
     <div>
       <BrowserRouter>
+        <HeaderComponent />
         <Routes>
-          <Route path="/" element={<LoginComponent />}></Route>
-          <Route path="/login" element={<LoginComponent />}></Route>
-          <Route path="/home" element={<WelcomeComponent />}></Route>
-          <Route path="*" element={<ErrorComponent />}></Route>
+          <Route path="/" element={<LoginComponent />} />
+          <Route path="/login" element={<LoginComponent />} />
+          <Route path="/home/:userName" element={<WelcomeComponent />} />
+          <Route path="/todos" element={<ListTodos />} />
+          <Route path="/logout" element={<LogoutComponent />} />
+          <Route path="*" element={<ErrorComponent />} />
         </Routes>
+        <FooterComponent />
       </BrowserRouter>
     </div>
   );
@@ -30,7 +41,7 @@ const LoginComponent = () => {
     if (userName === "Akshay" && password === "qwerty") {
       setShowSuccessMessage(true);
       setShowFailureMessage(false);
-      navigate("/home");
+      navigate("/home/" + userName);
     } else {
       setShowSuccessMessage(false);
       setShowFailureMessage(true);
@@ -39,7 +50,7 @@ const LoginComponent = () => {
 
   return (
     <div>
-        <h1>Time to login</h1>
+      <h1>Time to login</h1>
       {showSuccessMessage && (
         <div className="login-success">Authenticaed successfully</div>
       )}
@@ -83,7 +94,17 @@ const LoginComponent = () => {
 };
 
 const WelcomeComponent = () => {
-  return <div>Welcome to the Todo app</div>;
+  const { userName } = useParams();
+
+  return (
+    <div>
+      <h1>Welcome to the Todo app</h1>
+      <p>how are you {userName}</p>
+      <p>
+        Manage your todos <Link to="/todos">here</Link>
+      </p>
+    </div>
+  );
 };
 
 const ErrorComponent = () => {
@@ -93,6 +114,102 @@ const ErrorComponent = () => {
       <p>Something went wrong, contact admin</p>
     </div>
   );
+};
+
+const ListTodos = () => {
+  const today = new Date();
+  const targetData = new Date(
+    today.getFullYear() + 12,
+    today.getMonth(),
+    today.getDay()
+  );
+  const todos = [
+    { id: 1, description: "Learn AWS", done: false, targetData: targetData },
+    { id: 2, description: "Learn GCP", done: false, targetData: targetData },
+    { id: 3, description: "Learn AZURE", done: false, targetData: targetData },
+  ];
+  return (
+    <div className="container">
+      <h1>Things you want to do</h1>
+      <table className="table">
+        <thead>
+          <tr>
+            <td>Id</td>
+            <td>Description</td>
+            <td>Is done?</td>
+            <td>Target Date</td>
+          </tr>
+        </thead>
+        <tbody>
+          {todos.map((todo, index) => (
+            <tr key={index}>
+              <td>{todo.id}</td>
+              <td>{todo.description}</td>
+              <td>{todo.done.toString()}</td>
+              <td>{todo.targetData.toDateString()}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
+const HeaderComponent = () => {
+  return (
+    <header className="border-bottom border-light border-5 mb-5 p-2">
+      <div className="container">
+        <div className="row">
+          <nav className="navbar navbar-expand-lg">
+            <a
+              className="navbar-brand ms-2 fs-2 fw-bold text-black"
+              href="https://www.in28minutes.com"
+            >
+              in28minutes
+            </a>
+            <div className="collapse navbar-collapse">
+              <ul className="navbar-nav">
+                <li className="nav-item fs-5">
+                  <Link className="nav-link" to="/welcome/in28minutes">
+                    Home
+                  </Link>
+                </li>
+                <li className="nav-item fs-5">
+                  <Link className="nav-link" to="/todos">
+                    Todos
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            <ul className="navbar-nav">
+              <li className="nav-item fs-5">
+                <Link className="nav-link" to="/login">
+                  Login
+                </Link>
+              </li>
+              <li className="nav-item fs-5">
+                <Link className="nav-link" to="/logout">
+                  Logout
+                </Link>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </header>
+  );
+};
+
+const FooterComponent = () => {
+  return (
+    <footer className="footer">
+      <div className="container">Your Footer</div>
+    </footer>
+  );
+};
+
+const LogoutComponent = () => {
+  return <div>Your are logged out!</div>;
 };
 
 export default TodoApp;
