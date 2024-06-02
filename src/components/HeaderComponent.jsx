@@ -42,7 +42,7 @@ const HeaderComponent = () => {
               {authContext.isAuthenticated && (
                 <li
                   className="nav-item fs-5"
-                  onClick={() => authContext.setAuthenticated(false)}
+                  onClick={() => authContext.logout()}
                 >
                   <Link className="nav-link" to="/logout">
                     Logout

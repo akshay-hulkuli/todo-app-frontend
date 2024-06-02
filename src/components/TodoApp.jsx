@@ -1,13 +1,22 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import ErrorComponent from "./ErrorCompoenent";
 import FooterComponent from "./FooterComponent";
 import HeaderComponent from "./HeaderComponent";
 import ListTodos from "./ListTodos";
 import LoginComponent from "./LoginComponent";
 import LogoutComponent from "./LogoutComponent";
-import AuthProvider from "./security/AuthContext";
+import AuthProvider, { useAuth } from "./security/AuthContext";
 import "./todoApp.css";
 import WelcomeComponent from "./WelcomeComponent";
+
+const AuthenticatedRoute = ({ children }) => {
+  const authContext = useAuth();
+  if (authContext.isAuthenticated) {
+    return { children };
+  } else {
+    return <Navigate to="/" />;
+  }
+};
 
 const TodoApp = () => {
   return (
@@ -18,10 +27,22 @@ const TodoApp = () => {
           <Routes>
             <Route path="/" element={<LoginComponent />} />
             <Route path="/login" element={<LoginComponent />} />
-            <Route path="/home/:userName" element={<WelcomeComponent />} />
-            <Route path="/todos" element={<ListTodos />} />
-            <Route path="/logout" element={<LogoutComponent />} />
-            <Route path="*" element={<ErrorComponent />} />
+            <Route
+              path="/home/:userName"
+              element={<AuthenticatedRoute children={<WelcomeComponent />} />}
+            />
+            <Route
+              path="/todos"
+              element={<AuthenticatedRoute children={<ListTodos />} />}
+            />
+            <Route
+              path="/logout"
+              element={<AuthenticatedRoute children={<LogoutComponent />} />}
+            />
+            <Route
+              path="*"
+              element={<AuthenticatedRoute children={<ErrorComponent />} />}
+            />
           </Routes>
           <FooterComponent />
         </BrowserRouter>

@@ -6,31 +6,22 @@ const LoginComponent = () => {
   const navigate = useNavigate();
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [showFailureMessage, setShowFailureMessage] = useState(false);
   const authContext = useAuth();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("on submit");
-    if (userName === "Akshay" && password === "qwerty") {
-      setShowSuccessMessage(true);
+    if (authContext.login(userName, password)) {
       setShowFailureMessage(false);
       navigate("/home/" + userName);
-      authContext.setAuthenticated(true);
     } else {
-      setShowSuccessMessage(false);
       setShowFailureMessage(true);
-      authContext.setAuthenticated(false);
     }
   };
 
   return (
     <div>
       <h1>Time to login</h1>
-      {showSuccessMessage && (
-        <div className="login-success">Authenticaed successfully</div>
-      )}
       {showFailureMessage && (
         <div className="login-failure">
           {" "}
