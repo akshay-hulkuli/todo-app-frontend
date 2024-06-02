@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "./security/AuthContext";
 
 const LoginComponent = () => {
   const navigate = useNavigate();
@@ -7,6 +8,7 @@ const LoginComponent = () => {
   const [password, setPassword] = useState("");
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [showFailureMessage, setShowFailureMessage] = useState(false);
+  const authContext = useAuth();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -15,9 +17,11 @@ const LoginComponent = () => {
       setShowSuccessMessage(true);
       setShowFailureMessage(false);
       navigate("/home/" + userName);
+      authContext.setAuthenticated(true);
     } else {
       setShowSuccessMessage(false);
       setShowFailureMessage(true);
+      authContext.setAuthenticated(false);
     }
   };
 
