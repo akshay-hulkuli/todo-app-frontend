@@ -1,34 +1,43 @@
 import { ErrorMessage, Field, Form, Formik } from "formik";
+import moment from "moment";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { retrieveTodo, updateTodo } from "./api/todoService";
+import { createTodo, retrieveTodo, updateTodo } from "./api/todoService";
 import { useAuth } from "./security/AuthContext";
 
 const TodoComponent = () => {
   const authContext = useAuth();
-  const navigate  = useNavigate();
+  const navigate = useNavigate();
   const { id } = useParams();
   const [todo, setTodo] = useState({});
 
   useEffect(() => {
-    retrieveTodo(authContext.userName, id)
-      .then((response) => {
-        setTodo(response.data);
-        console.log(response.data);
-      })
-      .catch((error) => console.log(error));
+    if (id != -1) {
+      retrieveTodo(authContext.userName, id)
+        .then((response) => {
+          setTodo(response.data);
+          console.log(response.data);
+        })
+        .catch((error) => console.log(error));
+    }
   }, []);
 
   const onSubmit = (values) => {
     console.log(values);
     const tempTodo = {
-        id: id,
-        username: authContext.userName,
-        description: values.description,
-        targetDate: values.targetDate,
-        isDone: false
+      id: id,
+      username: authContext.userName,
+      description: values.description,
+      targetDate: values.targetDate,
+      isDone: false,
+    };
+    if (id === -1) {
+        createTodo(authContext.userName, tempTodo);
+    } else {
+      updateTodo(authContext.userName, id, tempTodo).then((response) =>
+        navigate(`/todos/${authContext.userName}`)
+      );
     }
-    updateTodo(authContext.userName, id, tempTodo).then(response => navigate(`/todos/${authContext.userName}`));
   };
 
   const validateValues = (values) => {
@@ -36,7 +45,7 @@ const TodoComponent = () => {
     if (values.description.length < 5) {
       errors["description"] = "length must be more than 5";
     }
-    if (!values.targetDate) {
+    if (!values.targetDate || !moment(values.targetDate).isValid()) {
       errors["targetDate"] = "date can't be empty";
     }
     return errors;

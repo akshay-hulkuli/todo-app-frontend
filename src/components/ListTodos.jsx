@@ -30,6 +30,10 @@ const ListTodos = () => {
       .catch((error) => console.log(error));
   };
 
+  const createTodo = () => {
+    navigate("/todo/-1")
+  }
+
   return (
     <div className="container">
       <h1>Things you want to do</h1>
@@ -39,6 +43,8 @@ const ListTodos = () => {
             <th>Description</th>
             <th>Is done?</th>
             <th>Target Date</th>
+            <th></th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -67,6 +73,9 @@ const ListTodos = () => {
           ))}
         </tbody>
       </table>
+      <div>
+        <button className="btn btn-success m-5" onClick={createTodo}>Create Todo</button>
+      </div>
     </div>
   );
 };
