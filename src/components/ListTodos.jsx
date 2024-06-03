@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { deleteTodo, retrieveAllTodosForUserName } from "./api/todoService";
 import { useAuth } from "./security/AuthContext";
 
 const ListTodos = () => {
   const authContext = useAuth();
+  const navigate = useNavigate();
   const [todos, setTodos] = useState([]);
 
   useEffect(() => {
@@ -13,6 +15,10 @@ const ListTodos = () => {
       })
       .catch((error) => alert(error));
   }, []);
+
+  const handleUpdate = (id) => {
+    navigate(`/todo/${id}`);
+  }
 
   const handleDelete = (id) => {
     deleteTodo(authContext.userName, id)
@@ -41,6 +47,14 @@ const ListTodos = () => {
               <td>{todo.description}</td>
               <td>{todo.done.toString()}</td>
               <td>{todo.targetDate}</td>
+              <td>
+                <button
+                  className="btn btn-warning"
+                  onClick={() => handleUpdate(todo.id)}
+                >
+                  Update
+                </button>
+              </td>
               <td>
                 <button
                   className="btn btn-danger"

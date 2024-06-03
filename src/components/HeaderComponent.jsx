@@ -18,12 +18,12 @@ const HeaderComponent = () => {
               {authContext.isAuthenticated && (
                 <ul className="navbar-nav">
                   <li className="nav-item fs-5">
-                    <Link className="nav-link" to="/home/Akshay">
+                    <Link className="nav-link" to={"/home/" + authContext.userName}>
                       Home
                     </Link>
                   </li>
                   <li className="nav-item fs-5">
-                    <Link className="nav-link" to="/todos">
+                    <Link className="nav-link" to={`/todos/${authContext.userName}`}>
                       Todos
                     </Link>
                   </li>
