@@ -12,7 +12,7 @@ import WelcomeComponent from "./WelcomeComponent";
 const AuthenticatedRoute = ({ children }) => {
   const authContext = useAuth();
   if (authContext.isAuthenticated) {
-    return { children };
+    return { ...children };
   } else {
     return <Navigate to="/" />;
   }
